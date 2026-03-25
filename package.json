@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "build": "prisma generate",
-    "prestart": "prisma migrate deploy"
+    "build": "npm install && npx prisma generate",
+    "prestart": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "Debayudh Chakraborty",
