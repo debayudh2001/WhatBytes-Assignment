@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String
+  patients  Patient[] // Patients registered by this user
+  doctors   Doctor[]  // Doctors registered by this user
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Patient {
+  id        String          @id @default(uuid())
+  name      String
+  age       Int
+  gender    String
+  contact   String
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctors   PatientDoctor[] // Mapping to doctors
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model Doctor {
+  id             String          @id @default(uuid())
+  name           String
+  specialization String
+  contact        String
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  patients       PatientDoctor[] // Mapping to patients
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model PatientDoctor {
+  id        String   @id @default(uuid())
+  patientId String
+  doctorId  String
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor    Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([patientId, doctorId])
+}
+
+
